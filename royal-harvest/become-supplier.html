@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 nodeUrl = 'http://localhost:5000/send-supplier-form';
             } else {
-                nodeUrl = 'https://YOUR-RENDER-BACKEND-URL.onrender.com/send-supplier-form'; // TODO: Replace with your actual Render URL after deployment
+               nodeUrl = 'https://api-node-royal-harvest.onrender.com/send-supplier-form';
             }
 
             async function submitToNode() {
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             } catch (nodeError) {
                 console.error('Node backend failed:', nodeError);
-                alert(`Submission failed. Please ensure the Node backend is running on http://${backendHost}:5000 and try again.\n\nError: ${nodeError.message}`);
+                alert(`Submission failed. Please ensure the Node backend is running at ${nodeUrl} and try again.\n\nError: ${nodeError.message}`);
                 return;
             }
         });

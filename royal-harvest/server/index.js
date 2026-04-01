@@ -16,6 +16,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Backend is running. Use POST /send-supplier-form with JSON body.' });
+});
+
+app.get('/send-supplier-form', (req, res) => {
+  res.status(200).json({
+    message: 'Endpoint /send-supplier-form expects POST. Please send a JSON body with full_name, company_name, email, phone, products, details.'
+  });
+});
+
 app.post('/send-supplier-form', async (req, res) => {
   const { full_name, company_name, email, phone, products, details } = req.body;
 
