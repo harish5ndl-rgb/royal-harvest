@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Royal Harvest Global Trade | Global Exporter</title>
 <meta name="description" content="Royal Harvest — premium agricultural exports connecting farmers to global markets.">
+<link rel="icon" href="images/logo.jpeg" type="image/jpeg">
+<link rel="apple-touch-icon" href="images/logo.jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css"><link rel="icon" href="images/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="images/favicon.png">
 </head>
 
 <body>
@@ -109,22 +112,24 @@
         </div>
 
         <div class="carousel-wrapper">
+            <button class="carousel-arrow carousel-arrow--prev" aria-label="Scroll left">◀</button>
+            <button class="carousel-arrow carousel-arrow--next" aria-label="Scroll right">▶</button>
             <div class="carousel-track">
 
                 <a href="products.html#rice-varieties" class="carousel-item reveal" data-reveal-delay="80">
-                    <img src="images/products/Rice.webp" alt="Rice">
+                    <img src="images/Products/Rice.webp" alt="Rice">
                     <h4>Rice</h4>
                 </a>
                 <a href="products.html#grains" class="carousel-item">
-                    <img src="images/products/grains.jpg" alt="Grains">
+                    <img src="images/Products/grains.jpg" alt="Grains">
                     <h4>Grains</h4>
                 </a>
                 <a href="products.html#mangos" class="carousel-item">
-                    <img src="images/products/mangos.jpg" alt="Mangos">
+                    <img src="images/Products/mangos.jpg" alt="Mangos">
                     <h4>Mangos</h4>
                 </a>
                 <a href="products.html#vegetables" class="carousel-item reveal" data-reveal-delay="320">
-                    <img src="images/products/vegetables.jpg" alt="Vegetables">
+                    <img src="images/Products/vegetables.jpg" alt="Vegetables">
                     <h4>Vegetables</h4>
                 </a>
 
@@ -302,6 +307,23 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
 function toggleMenu(){
     document.querySelector(".nav-list").classList.toggle("active");
+}
+
+// Product carousel arrow controls
+const carouselTrack = document.querySelector('.carousel-track');
+const prevBtn = document.querySelector('.carousel-arrow--prev');
+const nextBtn = document.querySelector('.carousel-arrow--next');
+
+if (carouselTrack && prevBtn && nextBtn) {
+    const scrollAmount = 280;
+
+    prevBtn.addEventListener('click', () => {
+        carouselTrack.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+        carouselTrack.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
 }
 </script>
 </body>
