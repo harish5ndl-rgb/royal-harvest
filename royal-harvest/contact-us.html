@@ -194,8 +194,15 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-function toggleMenu(){
-    document.querySelector(".nav-list").classList.toggle("active");
+function toggleMenu() {
+    const navList = document.querySelector(".nav-list");
+    const toggleButton = document.querySelector(".menu-toggle");
+    if (!navList) return;
+    navList.classList.toggle("active");
+    if (toggleButton) {
+        const expanded = toggleButton.getAttribute("aria-expanded") === "true";
+        toggleButton.setAttribute("aria-expanded", String(!expanded));
+    }
 }
 </script>
 </body>

@@ -800,5 +800,18 @@ High-quality potatoes in multiple varieties including russet, white, and yellow.
     </div>
 </footer>
 
+<script>
+function toggleMenu() {
+    const navList = document.querySelector(".nav-list");
+    const toggleButton = document.querySelector(".menu-toggle");
+    if (!navList) return;
+    navList.classList.toggle("active");
+    if (toggleButton) {
+        const expanded = toggleButton.getAttribute("aria-expanded") === "true";
+        toggleButton.setAttribute("aria-expanded", String(!expanded));
+    }
+}
+</script>
+
 </body>
 </html>
