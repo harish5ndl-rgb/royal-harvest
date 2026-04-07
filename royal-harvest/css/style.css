@@ -1703,16 +1703,17 @@ body {
 }
 
 .contact-card.call-card .contact-card-header {
-    flex-direction: row-reverse;
-    justify-content: space-between;
-}
+        justify-content: flex-start;
+    }
 
-.contact-card.call-card .contact-card-info {
-    text-align: left;
-}
+    .contact-card.call-card .contact-card-header i {
+        order: 0;
+    }
 
-.contact-card:hover {
-    transform: translateY(-8px);
+    .contact-card.call-card .contact-card-header .contact-card-info {
+        order: 1;
+        flex: 1;
+        min-width: 0;
     background: rgba(255, 255, 255, 0.25);
 }
 
