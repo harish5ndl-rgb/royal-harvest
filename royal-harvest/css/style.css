@@ -1714,8 +1714,7 @@ body {
         order: 1;
         flex: 1;
         min-width: 0;
-    background: rgba(255, 255, 255, 0.25);
-}
+    }
 
 
 
@@ -1781,8 +1780,4 @@ body {
     padding: 100px 0;
     background: url('images/farm-field.jpg') center/cover no-repeat;
     color: #fff;
-}
-
-.supplier-overlay {
-    /* add overlay styles here if needed */
 }
