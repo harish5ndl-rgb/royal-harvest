@@ -1243,14 +1243,13 @@ color: inherit;
 
 /* RIGHT FORM CARD */
 .supplier-form-wrapper {
-    /* slightly more translucent so background shows through */
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(255, 255, 255, 0.20);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* FORM */
@@ -1264,10 +1263,13 @@ color: inherit;
 .supplier-form textarea {
     padding: 14px 16px;
     border-radius: 10px;
-    border: 1px solid #d1d5db;
+    border: 1px solid rgba(255, 255, 255, 0.35);
     font-size: 15px;
     transition: all 0.3s ease;
-    background: #ffffffcc;
+    background: rgba(255, 255, 255, 0.45);
+    color: #1c1c1c;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 }
 
 /* Input Hover + Focus */
@@ -1276,6 +1278,7 @@ color: inherit;
     outline: none;
     border-color: #15803d;
     box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+    background: rgba(255, 255, 255, 0.65);
 }
 
 /* Submit Button */
@@ -1721,9 +1724,12 @@ body {
 
 /* RIGHT FORM */
 .supplier-form-wrapper{
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     padding: 40px;
     border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.35);
     box-shadow: 0 20px 40px rgba(0,0,0,0.08);
     transition: 0.4s ease;
 }
@@ -1751,17 +1757,23 @@ body {
     width: 100%;
     padding: 12px 14px;
     border-radius: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(255,255,255,0.35);
     font-size: 14px;
     transition: 0.3s ease;
     outline: none;
+    background: rgba(255,255,255,0.45);
+    color: #1c1c1c;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
 }
 
 .supplier-form input:focus,
 .supplier-form select:focus,
 .supplier-form textarea:focus{
+    background: rgba(255,255,255,0.65);
     border-color: #0c6b3f;
-    box-shadow: 0 0 0 3px rgba(12,107,63,0.1);
+    box-shadow: 0 0 0 3px rgba(12,107,63,0.12);
+    background: rgba(255,255,255,0.85);
 }
 
 /* Submit Button */
