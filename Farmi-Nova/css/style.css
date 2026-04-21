@@ -1222,6 +1222,11 @@ color: inherit;
     font-weight: bold;
 }
 
+.supplier-benefits {
+    max-width: 540px;
+    margin: 0 auto;
+}
+
 /* RIGHT FORM CARD */
 .supplier-form-wrapper {
     /* slightly more translucent so background shows through */
@@ -1283,6 +1288,10 @@ color: inherit;
 ================================= */
 
 @media (max-width: 992px) {
+    .become-supplier-section {
+        padding: 60px 0;
+    }
+
     .supplier-grid {
         grid-template-columns: 1fr;
         gap: 40px;
@@ -1292,13 +1301,58 @@ color: inherit;
         text-align: center;
     }
 
+    .supplier-content h2 {
+        font-size: 32px;
+    }
+
+    .supplier-content p {
+        max-width: 620px;
+        margin: 0 auto 28px;
+    }
+
+    .supplier-benefits {
+        padding: 0;
+    }
+
     .supplier-benefits li {
         padding-left: 0;
+        text-align: left;
+        max-width: 520px;
+        margin: 0 auto 12px;
     }
 
     .supplier-benefits li::before {
         position: static;
         margin-right: 8px;
+    }
+
+    .supplier-form-wrapper {
+        padding: 30px 20px;
+    }
+
+    .supplier-form input,
+    .supplier-form textarea,
+    .btn-submit {
+        width: 100%;
+    }
+}
+
+@media (max-width: 680px) {
+    .supplier-content h2 {
+        font-size: 28px;
+    }
+
+    .supplier-form-wrapper {
+        padding: 24px 18px;
+    }
+
+    .supplier-form input,
+    .supplier-form textarea {
+        font-size: 15px;
+    }
+
+    .btn-submit {
+        padding: 14px;
     }
 }
 
