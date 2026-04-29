@@ -60,25 +60,39 @@
             <p>Our certifications confirm the compliance, quality, and food safety of every export shipment.</p>
         </div>
 
-        <div class="cert-grid">
-            <div class="cert-card reveal" data-reveal-delay="120">
-                <img src="images/certifications/iso.png" alt="ISO Certification">
-                <h3>ISO Compliance</h3>
-                <p>Demonstrating that our management systems, processes, and operational controls meet international quality standards.</p>
-            </div>
-            <div class="cert-card reveal" data-reveal-delay="160">
+        <div class="cert-grid" id="cert-grid">
+            <button type="button" class="cert-card reveal cert-select" data-img="images/certifications/Udyam.jpg" data-title="Udyam Certificate" data-copy="Registered under MSME for small enterprise growth, export readiness, and enterprise recognition." data-reveal-delay="120">
+                <img src="images/certifications/Udyam.jpg" alt="Udyam Certificate">
+                <h3>Udyam Certificate</h3>
+                <p>Registered under MSME to support small enterprise growth and export readiness.</p>
+            </button>
+            <button type="button" class="cert-card reveal cert-select" data-img="images/certifications/apeda.png" data-title="APEDA Approval" data-copy="Certified for agricultural and processed food export compliance, traceability, and global market access." data-reveal-delay="160">
                 <img src="images/certifications/apeda.png" alt="APEDA Certification">
                 <h3>APEDA Approval</h3>
-                <p>Verified for agricultural and processed food exports, ensuring traceability and export readiness.</p>
-            </div>
-            <div class="cert-card reveal" data-reveal-delay="200">
+                <p>Approved for agricultural exports under India’s food product export regulations.</p>
+            </button>
+            <button type="button" class="cert-card reveal cert-select" data-img="images/certifications/fssai.png" data-title="FSSAI Food Safety" data-copy="Validated for safe food handling, packaging, and shipment across domestic and international markets." data-reveal-delay="200">
                 <img src="images/certifications/fssai.png" alt="FSSAI Certification">
                 <h3>FSSAI Food Safety</h3>
-                <p>Meeting India’s food safety regulations for the safe processing, storage, and shipment of food products.</p>
+                <p>Ensures our food safety management meets Indian regulatory standards.</p>
+            </button>
+        </div>
+
+        <div class="cert-modal" id="cert-modal">
+            <div class="cert-modal-backdrop" id="cert-modal-backdrop"></div>
+            <div class="cert-modal-content">
+                <button type="button" class="cert-modal-close" id="cert-modal-close" aria-label="Close preview">×</button>
+                <div class="cert-modal-image-wrap">
+                    <img id="modal-image" src="" alt="Certificate Preview">
+                </div>
+                <div class="cert-modal-copy">
+                    <h2 id="modal-title">Certificate Preview</h2>
+                    <p id="modal-copy">Click a certificate card above to view the selected certificate.</p>
+                </div>
             </div>
         </div>
 
-        <div class="cert-details reveal" data-reveal-delay="280">
+        <div class="cert-details reveal" data-reveal-delay="260">
             <h2>Standards That Support Every Shipment</h2>
             <ul>
                 <li>Rigorous quality inspections at origin and before export</li>
@@ -189,6 +203,39 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('scroll', revealOnScroll);
         revealOnScroll();
     }
+
+    const modal = document.getElementById('cert-modal');
+    const modalBackdrop = document.getElementById('cert-modal-backdrop');
+    const modalClose = document.getElementById('cert-modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalCopy = document.getElementById('modal-copy');
+    const modalImage = document.getElementById('modal-image');
+    const certButtons = document.querySelectorAll('.cert-select');
+
+    const closeModal = () => {
+        modal.classList.remove('visible');
+    };
+
+    const openModal = (button) => {
+        const title = button.dataset.title;
+        const copy = button.dataset.copy;
+        const img = button.dataset.img;
+        modalTitle.textContent = `${title} Preview`;
+        modalCopy.textContent = copy;
+        modalImage.src = img;
+        modalImage.alt = `${title} Preview`;
+        modal.classList.add('visible');
+    };
+
+    certButtons.forEach(button => {
+        button.addEventListener('click', () => openModal(button));
+    });
+
+    modalBackdrop.addEventListener('click', closeModal);
+    modalClose.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeModal();
+    });
 });
 </script>
 
