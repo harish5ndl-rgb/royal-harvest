@@ -746,7 +746,7 @@ color: inherit;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 0;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -762,21 +762,22 @@ color: inherit;
 .cert-modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(14, 23, 19, 0.78);
+    background: rgba(14, 23, 19, 0.88);
     backdrop-filter: blur(2px);
 }
 
 .cert-modal-content {
     position: relative;
-    width: min(980px, 100%);
-    max-height: 90vh;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
-    background: #ffffff;
-    border-radius: 28px;
-    box-shadow: 0 36px 90px rgba(0, 0, 0, 0.22);
-    transform: translateY(28px) scale(0.94);
-    transition: transform 0.25s ease;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    transform: translateY(0) scale(1);
+    transition: none;
     z-index: 2;
+    padding: 0;
 }
 
 .cert-modal.visible .cert-modal-content {
@@ -785,15 +786,17 @@ color: inherit;
 
 .cert-modal-image-wrap {
     width: 100%;
+    height: 100%;
     overflow: hidden;
-    border-bottom: 1px solid rgba(15, 61, 46, 0.08);
+    background: transparent;
 }
 
 .cert-modal-image-wrap img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
     object-fit: contain;
+    background: transparent;
 }
 
 .cert-modal-copy {

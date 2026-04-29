@@ -85,10 +85,6 @@
                 <div class="cert-modal-image-wrap">
                     <img id="modal-image" src="" alt="Certificate Preview" onerror="this.src='images/certifications/missing-cert.svg'; this.alt='Certificate image unavailable';">
                 </div>
-                <div class="cert-modal-copy">
-                    <h2 id="modal-title">Certificate Preview</h2>
-                    <p id="modal-copy">Click a certificate card above to view the selected certificate.</p>
-                </div>
             </div>
         </div>
 
@@ -207,8 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('cert-modal');
     const modalBackdrop = document.getElementById('cert-modal-backdrop');
     const modalClose = document.getElementById('cert-modal-close');
-    const modalTitle = document.getElementById('modal-title');
-    const modalCopy = document.getElementById('modal-copy');
     const modalImage = document.getElementById('modal-image');
     const certButtons = document.querySelectorAll('.cert-select');
 
@@ -217,11 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openModal = (button) => {
-        const title = button.dataset.title;
-        const copy = button.dataset.copy;
         const img = button.dataset.img;
-        modalTitle.textContent = `${title} Preview`;
-        modalCopy.textContent = copy;
+        const title = button.dataset.title;
         modalImage.src = img;
         modalImage.alt = `${title} Preview`;
         modal.classList.add('visible');
