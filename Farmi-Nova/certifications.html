@@ -219,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBackdrop = document.getElementById('cert-modal-backdrop');
     const modalClose = document.getElementById('cert-modal-close');
     const modalImage = document.getElementById('modal-image');
+    const modalContent = document.querySelector('.cert-modal-content');
     const certButtons = Array.from(document.querySelectorAll('.cert-select'));
 
     const closeModal = () => {
@@ -250,6 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
     openCertFromHash();
 
     modalBackdrop.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+    });
+    modalContent.addEventListener('click', (event) => {
+        if (event.target.closest('#modal-image') || event.target.closest('#cert-modal-close')) return;
+        closeModal();
+    });
     modalClose.addEventListener('click', closeModal);
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') closeModal();
