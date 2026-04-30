@@ -690,6 +690,19 @@ color: inherit;
     margin-top: 40px;
 }
 
+.certifications .cert-grid {
+    align-items: center;
+}
+
+.certifications .cert-grid img {
+    display: block;
+    width: auto;
+    max-width: 180px;
+    max-height: 140px;
+    margin: 0 auto;
+    height: auto;
+}
+
 .cert-card {
     display: flex;
     flex-direction: column;
