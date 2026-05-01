@@ -107,6 +107,7 @@ app.post('/send-supplier-form', async (req, res) => {
 });
 
 const path = require('path');
+const fs = require('fs');
 
 // Clean URL routing - serve HTML pages without .html extension
 // These routes must come BEFORE static file serving
@@ -115,45 +116,78 @@ const htmlDir = path.join(projectRoot, 'Farmi-Nova');
 
 console.log('Project root:', projectRoot);
 console.log('HTML directory:', htmlDir);
+console.log('HTML directory exists:', fs.existsSync(htmlDir));
+
+// List all HTML files in the directory
+if (fs.existsSync(htmlDir)) {
+  const files = fs.readdirSync(htmlDir).filter(f => f.endsWith('.html'));
+  console.log('Available HTML files:', files);
+}
 
 app.get('/home', (req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'index.html'));
+  res.sendFile(path.join(htmlDir, 'index.html'), (err) => {
+    if (err) console.error('Error serving /home:', err.message);
+  });
 });
 
 app.get('/certificates', (req, res) => {
+  const filePath = path.join(htmlDir, 'certifications.html');
+  console.log('Attempting to serve /certificates from:', filePath);
+  console.log('File exists:', fs.existsSync(filePath));
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'certifications.html'));
+  res.sendFile(filePath, (err) => {
+    if (err) console.error('Error serving /certificates:', err.message);
+  });
 });
 
 app.get('/products', (req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'products.html'));
+  res.sendFile(path.join(htmlDir, 'products.html'), (err) => {
+    if (err) console.error('Error serving /products:', err.message);
+  });
 });
 
 app.get('/about', (req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'about.html'));
+  res.sendFile(path.join(htmlDir, 'about.html'), (err) => {
+    if (err) console.error('Error serving /about:', err.message);
+  });
 });
 
 app.get('/contact', (req, res) => {
+  const filePath = path.join(htmlDir, 'contact-us.html');
+  console.log('Attempting to serve /contact from:', filePath);
+  console.log('File exists:', fs.existsSync(filePath));
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'contact-us.html'));
+  res.sendFile(filePath, (err) => {
+    if (err) console.error('Error serving /contact:', err.message);
+  });
 });
 
 app.get('/become-supplier', (req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'become-supplier.html'));
+  res.sendFile(path.join(htmlDir, 'become-supplier.html'), (err) => {
+    if (err) console.error('Error serving /become-supplier:', err.message);
+  });
 });
 
 // Root path serves index.html
 app.get('/', (req, res) => {
   res.set('Content-Type', 'text/html; charset=utf-8');
-  res.sendFile(path.join(htmlDir, 'index.html'));
+  res.sendFile(path.join(htmlDir, 'index.html'), (err) => {
+    if (err) console.error('Error serving /:', err.message);
+  });
 });
 
 // Serve static files (CSS, images, etc.) - this comes AFTER route handlers
 app.use(express.static(path.join(htmlDir)));
+
+// 404 handler - for debugging
+app.use((req, res) => {
+  console.log('404: Route not found:', req.path);
+  res.status(404).send('Not Found');
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
