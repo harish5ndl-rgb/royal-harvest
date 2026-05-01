@@ -106,6 +106,40 @@ app.post('/send-supplier-form', async (req, res) => {
   }
 });
 
+// Serve static files (CSS, images, etc.)
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../Farmi-Nova')));
+
+// Clean URL routing - serve HTML pages without .html extension
+app.get('/home', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/index.html'));
+});
+
+app.get('/certificates', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/certifications.html'));
+});
+
+app.get('/products', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/products.html'));
+});
+
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/about.html'));
+});
+
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/contact-us.html'));
+});
+
+app.get('/become-supplier', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/become-supplier.html'));
+});
+
+// Root path serves index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Farmi-Nova/index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
