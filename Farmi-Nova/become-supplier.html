@@ -258,17 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const isFileProtocol = window.location.protocol === 'file:';
             const nodeUrl = isLocal || isFileProtocol ? localBackend : productionBackend;
             form.action = nodeUrl;
-            const backendStatus = document.getElementById('backendStatus');
-
-            async function isBackendOnline(url) {
-                try {
-                    const healthUrl = url.replace('/send-supplier-form', '/');
-                    const testResponse = await fetch(healthUrl, { method: 'GET' });
-                    return testResponse.ok;
-                } catch (error) {
-                    return false;
-                }
-            }
 
             async function submitToNode() {
                 const response = await fetch(nodeUrl, {
@@ -281,47 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!response.ok) {
                     throw new Error(`Node backend error ${response.status}: ${result.message || response.statusText}`);
                 }
-
                 return result;
             }
 
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Checking backend...';
+                submitBtn.textContent = 'Submitting...';
             }
 
             const titleEl = thankYou.querySelector('h3');
-            if (titleEl) titleEl.textContent = 'Checking backend...';
-
-            const backendOnline = await isBackendOnline(nodeUrl);
-            if (!backendOnline) {
-                if (backendStatus) {
-                    backendStatus.innerHTML = `Backend server is offline. Start the server at <strong>${nodeUrl.replace('/send-supplier-form', '')}</strong> and reload the page.`;
-                    backendStatus.style.display = 'block';
-                }
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Application';
-                }
-                if (titleEl) {
-                    const offlineMessage = isLocal || isFileProtocol
-                        ? 'Local backend offline. Start localhost:5000 first.'
-                        : 'Remote backend offline. Check the deployed API service.';
-                    titleEl.textContent = offlineMessage;
-                }
-                return;
-            }
-
-            if (backendStatus) {
-                backendStatus.style.display = 'none';
-            }
-            if (submitBtn) {
-                submitBtn.textContent = 'Submitting...';
-            }
-            if (titleEl) {
-                titleEl.textContent = 'Submitting your application...';
-            }
+            if (titleEl) titleEl.textContent = 'Submitting your application...';
 
             try {
                 const result = await submitToNode();
