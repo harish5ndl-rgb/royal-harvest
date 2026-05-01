@@ -103,6 +103,9 @@ app.post('/send-supplier-form', async (req, res) => {
       message: 'Unable to send email. Please try again later.',
       error: error.message
     });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
