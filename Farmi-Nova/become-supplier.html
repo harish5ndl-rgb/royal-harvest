@@ -281,30 +281,28 @@ document.addEventListener('DOMContentLoaded', () => {
         throw err;
     }
 }
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
-            }
-
             const titleEl = thankYou.querySelector('h3');
-            if (titleEl) titleEl.textContent = 'Submitting your application...';
+            const descriptionEl = thankYou.querySelector('p');
+
+            form.classList.add('hidden');
+            thankYou.classList.remove('hidden');
+            if (titleEl) titleEl.textContent = 'Thank you! Your application is being submitted.';
+            if (descriptionEl) descriptionEl.textContent = 'We are processing your request and will contact you shortly.';
 
             try {
                 const result = await submitToNode();
-                form.classList.add('hidden');
-                thankYou.classList.remove('hidden');
                 if (titleEl) {
                     titleEl.textContent = result?.message || 'Thank you for choosing FarmiNova Global Trade!';
+                }
+                if (descriptionEl) {
+                    descriptionEl.textContent = 'Your submission was received successfully. We will review it and be in touch.';
                 }
             } catch (nodeError) {
                 console.error('Node backend failed:', nodeError);
                 if (titleEl) titleEl.textContent = 'Submission failed. Please try again.';
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Application';
+                if (descriptionEl) {
+                    descriptionEl.textContent = 'We could not complete your submission. Refresh the page and try again, or contact us directly.';
                 }
-                alert(`Submission failed. Please check your backend and try again.\n\nError: ${nodeError.message}`);
             }
         });
     }

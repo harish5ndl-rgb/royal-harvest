@@ -11,7 +11,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000; // You can change this if needed
 
-app.use(cors({ origin: true, methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
+app.use(cors());
 app.options('*', cors());
 app.use(express.json({
   limit: '10mb',
