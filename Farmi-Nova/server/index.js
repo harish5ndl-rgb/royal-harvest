@@ -105,23 +105,15 @@ app.post('/send-supplier-form', async (req, res) => {
   }
 
   const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  service: "gmail",
+  pool: true,
+  maxConnections: 1,
+  maxMessages: 100,
   auth: {
     user: gmailUser,
     pass: gmailPass
-  },
-  tls: {
-    rejectUnauthorized: false
-  },
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-  debug: true,
-  logger: true
+  }
 });
-
 transporter.verify((error, success) => {
   if (error) {
     console.error("SMTP VERIFY ERROR:", error);
