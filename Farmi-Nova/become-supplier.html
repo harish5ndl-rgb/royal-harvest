@@ -248,13 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 details: form.details.value
             };
 
-            const localBackend = 'http://localhost:5000/send-supplier-form';
-            const productionBackend = 'https://api-node-royal-harvest.onrender.com/send-supplier-form';
-            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const isFileProtocol = window.location.protocol === 'file:';
-            const nodeUrl = isLocal || isFileProtocol ? localBackend : productionBackend;
-            form.action = nodeUrl;
-
+            const nodeUrl = 'https://api-node-royal-harvest.onrender.com/send-supplier-form';
+form.action = nodeUrl;
             async function submitToNode() {
                 const response = await fetch(nodeUrl, {
                     method: 'POST',
