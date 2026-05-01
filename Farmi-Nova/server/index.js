@@ -46,42 +46,96 @@ app.get('/send-supplier-form', (req, res) => {
 
 app.post('/send-supplier-form', async (req, res) => {
   const { full_name, company_name, email, phone, products, details } = req.body;
-
-  // Configure nodemailer with Gmail using environment variables
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_PASS;
-  const receiverEmail = process.env.RECEIVER_EMAIL || gmailUser;
+  const sendGridApiKey = process.env.SENDGRID_API_KEY;
+  const receiverEmail = process.env.RECEIVER_EMAIL || gmailUser || process.env.SENDGRID_FROM_EMAIL;
+  const sendGridFromEmail = process.env.SENDGRID_FROM_EMAIL || gmailUser || receiverEmail;
+
+  const emailBody = `Supplier Application Received:\n\nFull Name: ${full_name}\nFarm / Company Name: ${company_name}\nEmail Address: ${email}\nPhone Number: ${phone}\nProducts Supplied: ${products}\nAdditional Details: ${details}`;
+
+  if (sendGridApiKey) {
+    if (!receiverEmail || !sendGridFromEmail) {
+      console.error('SendGrid email addresses are not configured. Set SENDGRID_FROM_EMAIL and RECEIVER_EMAIL.');
+      return res.status(500).json({
+        message: 'SendGrid email configuration is incomplete. Please contact the site administrator.'
+      });
+    }
+
+    try {
+      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${sendGridApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          personalizations: [
+            {
+              to: [{ email: receiverEmail }],
+              subject: 'New Supplier Application - FarmiNova Global Trade'
+            }
+          ],
+          from: { email: sendGridFromEmail, name: 'FarmiNova Global Trade' },
+          content: [{ type: 'text/plain', value: emailBody }]
+        })
+      });
+
+      if (!response.ok) {
+        const responseText = await response.text();
+        throw new Error(`SendGrid error ${response.status}: ${responseText}`);
+      }
+
+      return res.status(200).json({ message: 'Thank you for your application! Your details have been sent successfully.' });
+    } catch (error) {
+      console.error('Failed to send supplier email via SendGrid:', error);
+      return res.status(502).json({
+        message: 'Unable to send your application email right now. Please try again later or contact us directly.',
+        warning: 'EMAIL_DELIVERY_FAILED',
+        error: error.message
+      });
+    }
+  }
 
   if (!gmailUser || !gmailPass) {
-    console.error('Email configuration missing. GMAIL_USER or GMAIL_PASS is not set.');
+    console.error('Email configuration missing. Use SENDGRID_API_KEY or set GMAIL_USER and GMAIL_PASS.');
     return res.status(500).json({
       message: 'Email is not configured on the server. Please contact the site administrator.'
     });
   }
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
       user: gmailUser,
       pass: gmailPass
-    }
+    },
+    tls: {
+      rejectUnauthorized: false
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000
   });
 
   const mailOptions = {
     from: `"FarmiNova Global Trade" <${gmailUser}>`,
     to: receiverEmail,
     subject: 'New Supplier Application - FarmiNova Global Trade',
-    text: `Supplier Application Received:\n\nFull Name: ${full_name}\nFarm / Company Name: ${company_name}\nEmail Address: ${email}\nPhone Number: ${phone}\nProducts Supplied: ${products}\nAdditional Details: ${details}`
+    text: emailBody
   };
 
   try {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Thank you for your application! Your details have been sent successfully.' });
   } catch (error) {
-    console.error('Failed to send supplier email:', error);
+    console.error('Failed to send supplier email via Gmail SMTP:', error);
     res.status(502).json({
       message: 'Unable to send your application email right now. Please try again later or contact us directly.',
-      warning: 'EMAIL_DELIVERY_FAILED'
+      warning: 'EMAIL_DELIVERY_FAILED',
+      error: error.message
     });
   }
 });
