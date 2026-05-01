@@ -2,6 +2,11 @@ html{
 scroll-behavior:smooth;
 }
 
+/* Performance: Lazy load images by default */
+img {
+    loading: lazy;
+}
+
 
 
 *{
@@ -210,10 +215,12 @@ body, p, li {
 .hero {
     position: relative;
     height: 100vh;
-    background: url('../images/hero-bg.png') center center/cover no-repeat;
+    background: url('../images/hero-bg.png') center center/cover no-repeat fixed;
     display: flex;
     align-items: center;
-    justify-content: center;  
+    justify-content: center;
+    content-visibility: auto;
+    will-change: background-image;
 }
 
 /* Utility hidden class and thank-you message styling */
@@ -282,8 +289,11 @@ body, p, li {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     color: #fff;
     overflow:hidden;
+    content-visibility: auto;
+    will-change: background-image;
 }
 
 .contact-hero .overlay{
@@ -396,6 +406,7 @@ body, p, li {
 .rice-section {
     padding: 90px 0;
     background: linear-gradient(180deg, #f7faf3 0%, #eef6ed 100%);
+    content-visibility: auto;
 }
 
 .section-title {
@@ -545,6 +556,7 @@ color: inherit;
     background:#eaf6ef;
     padding:50px 0;
     position: relative;
+    content-visibility: auto;
 }
 
 .carousel-wrapper{
@@ -680,6 +692,7 @@ color: inherit;
 
 /* ================= CERTIFICATIONS ================= */
 .certifications{
+    content-visibility: auto;
     font-size: 1rem;
 }
 
@@ -1115,6 +1128,7 @@ color: inherit;
 
 .about-preview {
     padding: 90px 0;
+    content-visibility: auto;
     background: #f4f9f5;
 }
 
@@ -1449,6 +1463,7 @@ color: inherit;
     transition: opacity 0.6s ease, transform 0.6s ease;
     transition-delay: var(--reveal-delay, 0ms);
     will-change: opacity, transform;
+    content-visibility: auto;
 }
 
 .reveal.active {
@@ -1494,8 +1509,10 @@ color: inherit;
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: scroll;
+    background-attachment: fixed;
     overflow: hidden;
+    content-visibility: auto;
+    will-change: background-image;
 }
 
 .become-supplier-section::before {
