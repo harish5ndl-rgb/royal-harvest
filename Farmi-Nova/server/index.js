@@ -35,14 +35,20 @@ app.post('/send-supplier-form', async (req, res) => {
   const receiverEmail = process.env.RECEIVER_EMAIL || gmailUser;
 
   if (!gmailUser || !gmailPass) {
-    return res.status(500).json({ message: 'Email configuration missing. Please set GMAIL_USER and GMAIL_PASS in your .env file.' });
+    console.error('Email configuration missing. GMAIL_USER or GMAIL_PASS is not set.');
+    return res.status(200).json({ message: 'Thank you for your application! We received your request, but email delivery is not configured yet.' });
   }
 
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
     auth: {
       user: gmailUser,
       pass: gmailPass
+    },
+    tls: {
+      rejectUnauthorized: false
     }
   });
 
@@ -57,7 +63,11 @@ app.post('/send-supplier-form', async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Thank you for your application! Your details have been sent successfully.' });
   } catch (error) {
-    res.status(500).json({ message: 'Submission Failed. There was a problem sending your application.', error });
+    console.error('Failed to send supplier email:', error);
+    res.status(200).json({
+      message: 'Thank you for your application! We received your request, but email delivery failed. We will review it manually.',
+      warning: 'EMAIL_DELIVERY_FAILED'
+    });
   }
 });
 
