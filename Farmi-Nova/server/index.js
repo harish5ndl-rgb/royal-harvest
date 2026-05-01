@@ -13,15 +13,21 @@ const PORT = process.env.PORT || 5000; // You can change this if needed
 
 app.use(cors({ origin: true, methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
 app.options('*', cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf) => {
+    req.rawBody = buf.toString();
+  }
+}));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Handle invalid JSON bodies without failing the entire submission.
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     console.error('Invalid JSON payload received:', err.message);
-    return res.status(200).json({
-      message: 'Thank you! We received your request, but the form payload could not be parsed. Please retry.'
+    console.error('Raw payload was:', req.rawBody);
+    return res.status(400).json({
+      message: 'The form payload could not be parsed. Please refresh the page and try again.'
     });
   }
 
@@ -48,18 +54,18 @@ app.post('/send-supplier-form', async (req, res) => {
 
   if (!gmailUser || !gmailPass) {
     console.error('Email configuration missing. GMAIL_USER or GMAIL_PASS is not set.');
-    return res.status(200).json({
-      message: 'Thank you for your application! We received your request, but email delivery is not configured yet.'
+    return res.status(500).json({
+      message: 'Email is not configured on the server. Please contact the site administrator.'
     });
   }
 
-  let transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: gmailUser,
-    pass: gmailPass
-  }
-});
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPass
+    }
+  });
 
   const mailOptions = {
     from: `"FarmiNova Global Trade" <${gmailUser}>`,
@@ -73,8 +79,8 @@ app.post('/send-supplier-form', async (req, res) => {
     res.status(200).json({ message: 'Thank you for your application! Your details have been sent successfully.' });
   } catch (error) {
     console.error('Failed to send supplier email:', error);
-    res.status(200).json({
-      message: 'Thank you for your application! We received your request, but email delivery failed. We will review it manually.',
+    res.status(502).json({
+      message: 'Unable to send your application email right now. Please try again later or contact us directly.',
       warning: 'EMAIL_DELIVERY_FAILED'
     });
   }
