@@ -46,96 +46,83 @@ app.get('/send-supplier-form', (req, res) => {
 
 app.post('/send-supplier-form', async (req, res) => {
   const { full_name, company_name, email, phone, products, details } = req.body;
+  
+  console.log('📬 Received supplier form submission:', { full_name, company_name, email, phone });
+
+  const brevoApiKey = process.env.BREVO_API_KEY;
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_PASS;
-  const sendGridApiKey = process.env.SENDGRID_API_KEY;
-  const receiverEmail = process.env.RECEIVER_EMAIL || gmailUser || process.env.SENDGRID_FROM_EMAIL;
-  const sendGridFromEmail = process.env.SENDGRID_FROM_EMAIL || gmailUser || receiverEmail;
+  const receiverEmail = process.env.RECEIVER_EMAIL || gmailUser;
+
+  if (!receiverEmail) {
+    console.error('❌ Receiver email not configured.');
+    return res.status(500).json({
+      message: 'Email configuration incomplete. Please contact the administrator.'
+    });
+  }
 
   const emailBody = `Supplier Application Received:\n\nFull Name: ${full_name}\nFarm / Company Name: ${company_name}\nEmail Address: ${email}\nPhone Number: ${phone}\nProducts Supplied: ${products}\nAdditional Details: ${details}`;
 
-  if (sendGridApiKey) {
-    if (!receiverEmail || !sendGridFromEmail) {
-      console.error('SendGrid email addresses are not configured. Set SENDGRID_FROM_EMAIL and RECEIVER_EMAIL.');
-      return res.status(500).json({
-        message: 'SendGrid email configuration is incomplete. Please contact the site administrator.'
-      });
-    }
-
+  // Try Brevo first (more reliable on Render)
+  if (brevoApiKey) {
+    console.log('📧 Attempting to send via Brevo...');
     try {
-      const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${sendGridApiKey}`,
+          'api-key': brevoApiKey,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          personalizations: [
-            {
-              to: [{ email: receiverEmail }],
-              subject: 'New Supplier Application - FarmiNova Global Trade'
-            }
-          ],
-          from: { email: sendGridFromEmail, name: 'FarmiNova Global Trade' },
-          content: [{ type: 'text/plain', value: emailBody }]
+          sender: { name: 'FarmiNova Global Trade', email: 'noreply@farminovaglobaltrade.com' },
+          to: [{ email: receiverEmail }],
+          subject: 'New Supplier Application - FarmiNova Global Trade',
+          textContent: emailBody
         })
       });
 
       if (!response.ok) {
-        const responseText = await response.text();
-        throw new Error(`SendGrid error ${response.status}: ${responseText}`);
+        const errorText = await response.text();
+        throw new Error(`Brevo error ${response.status}: ${errorText}`);
       }
 
+      console.log('✅ Email sent successfully via Brevo');
       return res.status(200).json({ message: 'Thank you for your application! Your details have been sent successfully.' });
     } catch (error) {
-      console.error('Failed to send supplier email via SendGrid:', error);
-      return res.status(502).json({
-        message: 'Unable to send your application email right now. Please try again later or contact us directly.',
-        warning: 'EMAIL_DELIVERY_FAILED',
-        error: error.message
-      });
+      console.error('❌ Brevo failed:', error.message);
     }
   }
 
+  // Fallback to Gmail
   if (!gmailUser || !gmailPass) {
-    console.error('Email configuration missing. Use SENDGRID_API_KEY or set GMAIL_USER and GMAIL_PASS.');
+    console.error('❌ Email configuration missing. Set BREVO_API_KEY or GMAIL_USER + GMAIL_PASS.');
     return res.status(500).json({
-      message: 'Email is not configured on the server. Please contact the site administrator.'
+      message: 'Email service is not configured. Please try again later.'
     });
   }
 
+  console.log('📧 Attempting to send via Gmail SMTP...');
   const transporter = nodemailer.createTransport({
-  service: "gmail",
-  pool: true,
-  maxConnections: 1,
-  maxMessages: 100,
-  auth: {
-    user: gmailUser,
-    pass: gmailPass
-  }
-});
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("SMTP VERIFY ERROR:", error);
-  } else {
-    console.log("SMTP READY");
-  }
-});
-  const mailOptions = {
-    from: `"FarmiNova Global Trade" <${gmailUser}>`,
-    to: receiverEmail,
-    subject: 'New Supplier Application - FarmiNova Global Trade',
-    text: emailBody
-  };
+    service: 'gmail',
+    auth: {
+      user: gmailUser,
+      pass: gmailPass
+    }
+  });
 
   try {
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail({
+      from: `"FarmiNova Global Trade" <${gmailUser}>`,
+      to: receiverEmail,
+      subject: 'New Supplier Application - FarmiNova Global Trade',
+      text: emailBody
+    });
+    console.log('✅ Email sent successfully via Gmail');
     res.status(200).json({ message: 'Thank you for your application! Your details have been sent successfully.' });
   } catch (error) {
-    console.error('Failed to send supplier email via Gmail SMTP:', error);
+    console.error('❌ Gmail SMTP failed:', error.message);
     res.status(502).json({
-      message: 'Unable to send your application email right now. Please try again later or contact us directly.',
-      warning: 'EMAIL_DELIVERY_FAILED',
+      message: 'Unable to send your application email right now. Please try again later.',
       error: error.message
     });
   }
